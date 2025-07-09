@@ -11,8 +11,9 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <ShoppingBag className="h-8 w-8 text-orange-500" />
-              <span className="text-xl font-bold">
-                Thrift Haven <span className="text-orange-500">KE</span>
+              <span className="text-xl font-bold" 
+                THE FASHIONISTA YARD
+                <span className="text-orange-500">KE</span>
               </span>
             </div>
             <p className="text-gray-400">
