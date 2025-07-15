@@ -68,10 +68,10 @@ export default function Reports() {
     
     filteredSales.forEach(sale => {
       sale.items.forEach(item => {
-        const product = products.find(p => p.name === item.name);
+        const product = products.find(p => p.name === item.productName);
         if (product) {
           const category = product.category;
-          categoryRevenue[category] = (categoryRevenue[category] || 0) + (item.price * item.quantity);
+          categoryRevenue[category] = (categoryRevenue[category] || 0) + item.total;
         }
       });
     });

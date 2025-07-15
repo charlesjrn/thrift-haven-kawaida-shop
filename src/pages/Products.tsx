@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Plus, Edit, Trash2, AlertTriangle } from 'lucide-react';
 import { useInventory } from '@/contexts/InventoryContext';
+import { ProductCategory } from '@/types';
 import { toast } from 'sonner';
 
 export default function Products() {
@@ -17,14 +18,14 @@ export default function Products() {
   const [formData, setFormData] = useState({
     name: '',
     brand: '',
-    category: '',
+    category: '' as ProductCategory | '',
     size: '',
     price: '',
     stock: '',
     minStock: ''
   });
 
-  const categories = ['Whisky', 'Vodka', 'Beer', 'Wine', 'Soft Drinks', 'Energy Drinks', 'Water'];
+  const categories: ProductCategory[] = ['Whisky', 'Vodka', 'Beer', 'Wine', 'Soft Drinks', 'Gin', 'Rum', 'Brandy', 'Liqueur'];
 
   const resetForm = () => {
     setFormData({
@@ -41,10 +42,15 @@ export default function Products() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!formData.category) {
+      toast.error('Please select a category');
+      return;
+    }
+    
     const productData = {
       name: formData.name,
       brand: formData.brand,
-      category: formData.category,
+      category: formData.category as ProductCategory,
       size: formData.size,
       price: parseFloat(formData.price),
       stock: parseInt(formData.stock),
@@ -110,7 +116,7 @@ export default function Products() {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="category">Category</Label>
-          <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
+          <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value as ProductCategory })}>
             <SelectTrigger>
               <SelectValue placeholder="Select category" />
             </SelectTrigger>

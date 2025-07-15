@@ -8,14 +8,15 @@ import { useInventory } from '@/contexts/InventoryContext';
 import { useSales } from '@/contexts/SalesContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { SaleItem } from '@/types';
 
 export default function POS() {
   const { products } = useInventory();
   const { addSale } = useSales();
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
-  const [cart, setCart] = useState<Array<{ productId: string; quantity: number; price: number; name: string }>>([]);
-  const [paymentMethod, setPaymentMethod] = useState<'cash' | 'mpesa'>('cash');
+  const [cart, setCart] = useState<SaleItem[]>([]);
+  const [paymentMethod, setPaymentMethod] = useState<'cash' | 'mpesa' | 'card'>('cash');
 
   const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -27,16 +28,22 @@ export default function POS() {
     if (existingItem) {
       setCart(cart.map(item =>
         item.productId === product.id
-          ? { ...item, quantity: item.quantity + 1 }
+          ? { 
+              ...item, 
+              quantity: item.quantity + 1,
+              total: (item.quantity + 1) * item.unitPrice
+            }
           : item
       ));
     } else {
-      setCart([...cart, {
+      const newItem: SaleItem = {
         productId: product.id,
+        productName: product.name,
         quantity: 1,
-        price: product.price,
-        name: product.name
-      }]);
+        unitPrice: product.price,
+        total: product.price
+      };
+      setCart([...cart, newItem]);
     }
   };
 
@@ -50,11 +57,17 @@ export default function POS() {
       return;
     }
     setCart(cart.map(item =>
-      item.productId === productId ? { ...item, quantity } : item
+      item.productId === productId 
+        ? { 
+            ...item, 
+            quantity,
+            total: quantity * item.unitPrice
+          } 
+        : item
     ));
   };
 
-  const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const totalAmount = cart.reduce((sum, item) => sum + item.total, 0);
 
   const completeSale = () => {
     if (cart.length === 0) {
@@ -132,8 +145,8 @@ export default function POS() {
                 {cart.map((item) => (
                   <div key={item.productId} className="flex items-center justify-between p-2 border rounded">
                     <div className="flex-1">
-                      <p className="font-medium text-sm">{item.name}</p>
-                      <p className="text-xs text-gray-600">KSh {item.price.toLocaleString()} each</p>
+                      <p className="font-medium text-sm">{item.productName}</p>
+                      <p className="text-xs text-gray-600">KSh {item.unitPrice.toLocaleString()} each</p>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Button

@@ -80,8 +80,8 @@ export default function Sales() {
             </div>
             ${sale.items.map((item: any) => `
               <div class="item">
-                <span>${item.name} x${item.quantity}</span>
-                <span>KSh ${(item.price * item.quantity).toLocaleString()}</span>
+                <span>${item.productName} x${item.quantity}</span>
+                <span>KSh ${item.total.toLocaleString()}</span>
               </div>
             `).join('')}
             <div class="total">
@@ -208,8 +208,8 @@ export default function Sales() {
                     <div className="space-y-1">
                       {sale.items.map((item, index) => (
                         <div key={index} className="flex justify-between text-sm">
-                          <span>{item.name} x{item.quantity}</span>
-                          <span>KSh {(item.price * item.quantity).toLocaleString()}</span>
+                          <span>{item.productName} x{item.quantity}</span>
+                          <span>KSh {item.total.toLocaleString()}</span>
                         </div>
                       ))}
                     </div>
