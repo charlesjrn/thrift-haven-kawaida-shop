@@ -22,7 +22,8 @@ export default function Products() {
     size: '',
     price: '',
     stock: '',
-    minStock: ''
+    minStock: '',
+    image: ''
   });
 
   const categories: ProductCategory[] = ['Whisky', 'Vodka', 'Beer', 'Wine', 'Soft Drinks', 'Gin', 'Rum', 'Brandy', 'Liqueur'];
@@ -35,7 +36,8 @@ export default function Products() {
       size: '',
       price: '',
       stock: '',
-      minStock: ''
+      minStock: '',
+      image: ''
     });
   };
 
@@ -54,7 +56,8 @@ export default function Products() {
       size: formData.size,
       price: parseFloat(formData.price),
       stock: parseInt(formData.stock),
-      minStock: parseInt(formData.minStock)
+      minStock: parseInt(formData.minStock),
+      image: formData.image
     };
 
     if (editingProduct) {
@@ -79,7 +82,8 @@ export default function Products() {
       size: product.size,
       price: product.price.toString(),
       stock: product.stock.toString(),
-      minStock: product.minStock.toString()
+      minStock: product.minStock.toString(),
+      image: product.image || ''
     });
   };
 
@@ -174,6 +178,16 @@ export default function Products() {
         </div>
       </div>
 
+      <div>
+        <Label htmlFor="image">Product Image URL</Label>
+        <Input
+          id="image"
+          value={formData.image}
+          onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+          placeholder="Enter image URL (optional)"
+        />
+      </div>
+
       <div className="flex space-x-2">
         <Button type="submit" className="flex-1">
           {editingProduct ? 'Update Product' : 'Add Product'}
@@ -239,13 +253,21 @@ export default function Products() {
           <div className="space-y-4">
             {products.map((product) => (
               <div key={product.id} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2">
-                    <h3 className="font-medium">{product.name}</h3>
-                    {product.stock <= product.minStock && (
-                      <AlertTriangle className="h-4 w-4 text-red-500" />
-                    )}
-                  </div>
+                <div className="flex items-center space-x-4 flex-1">
+                  {product.image && (
+                    <img 
+                      src={product.image} 
+                      alt={product.name}
+                      className="w-16 h-16 object-cover rounded-md"
+                    />
+                  )}
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2">
+                      <h3 className="font-medium">{product.name}</h3>
+                      {product.stock <= product.minStock && (
+                        <AlertTriangle className="h-4 w-4 text-red-500" />
+                      )}
+                    </div>
                   <p className="text-sm text-gray-600">
                     {product.brand} • {product.category} • {product.size}
                   </p>
@@ -256,6 +278,7 @@ export default function Products() {
                     <span className={`text-sm ${product.stock <= product.minStock ? 'text-red-600' : 'text-gray-600'}`}>
                       Stock: {product.stock}
                     </span>
+                  </div>
                   </div>
                 </div>
                 <div className="flex space-x-2">

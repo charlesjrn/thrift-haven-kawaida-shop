@@ -17,6 +17,7 @@ export interface Product {
   price: number;
   stock: number;
   minStock: number;
+  image?: string;
   createdAt: string;
   updatedAt: string;
 }
