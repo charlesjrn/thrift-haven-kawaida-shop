@@ -6,6 +6,12 @@ import { ShoppingBag, Heart, Truck, MessageCircle } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
+// Import product images
+import denimJacketImg from "@/assets/denim-jacket.jpg";
+import sneakersImg from "@/assets/sneakers.jpg";
+import summerDressImg from "@/assets/summer-dress.jpg";
+import handbagImg from "@/assets/handbag.jpg";
+
 const Index = () => {
   const featuredProducts = [
     {
@@ -13,7 +19,7 @@ const Index = () => {
       name: "Vintage Denim Jacket",
       price: "KSh 1,200",
       originalPrice: "KSh 3,500",
-      image: "/lovable-uploads/denim-jacket.jpg",
+      image: denimJacketImg,
       category: "Vintage"
     },
     {
@@ -21,7 +27,7 @@ const Index = () => {
       name: "Designer Sneakers",
       price: "KSh 2,800",
       originalPrice: "KSh 8,000",
-      image: "/lovable-uploads/sneakers.jpg",
+      image: sneakersImg,
       category: "Shoes"
     },
     {
@@ -29,7 +35,7 @@ const Index = () => {
       name: "Floral Summer Dress",
       price: "KSh 900",
       originalPrice: "KSh 2,500",
-      image: "/lovable-uploads/summer-dress.jpg",
+      image: summerDressImg,
       category: "Women"
     },
     {
@@ -37,7 +43,7 @@ const Index = () => {
       name: "Leather Handbag",
       price: "KSh 1,800",
       originalPrice: "KSh 5,000",
-      image: "/lovable-uploads/handbag.jpg",
+      image: handbagImg,
       category: "Accessories"
     }
   ];
@@ -121,9 +127,11 @@ const Index = () => {
               <Card key={product.id} className="group hover:shadow-lg transition-shadow duration-300">
                 <CardContent className="p-0">
                   <div className="aspect-square bg-gray-200 rounded-t-lg overflow-hidden">
-                    <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-                      <span className="text-gray-600 font-medium">{product.name}</span>
-                    </div>
+                    <img 
+                      src={product.image} 
+                      alt={product.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
                   </div>
                   <div className="p-4">
                     <h3 className="font-semibold mb-1">{product.name}</h3>

@@ -8,6 +8,14 @@ import { Filter, Search } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
+// Import product images
+import denimJacketImg from "@/assets/denim-jacket.jpg";
+import sneakersImg from "@/assets/sneakers.jpg";
+import summerDressImg from "@/assets/summer-dress.jpg";
+import handbagImg from "@/assets/handbag.jpg";
+import formalShirtImg from "@/assets/formal-shirt.jpg";
+import kidsTshirtImg from "@/assets/kids-tshirt.jpg";
+
 const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [priceRange, setPriceRange] = useState("all");
@@ -21,7 +29,7 @@ const Shop = () => {
       category: "vintage",
       condition: "Excellent",
       size: "M",
-      image: "/lovable-uploads/denim-jacket.jpg"
+      image: denimJacketImg
     },
     {
       id: 2,
@@ -31,7 +39,7 @@ const Shop = () => {
       category: "shoes",
       condition: "Very Good",
       size: "42",
-      image: "/lovable-uploads/sneakers.jpg"
+      image: sneakersImg
     },
     {
       id: 3,
@@ -41,7 +49,7 @@ const Shop = () => {
       category: "women",
       condition: "Good",
       size: "L",
-      image: "/lovable-uploads/summer-dress.jpg"
+      image: summerDressImg
     },
     {
       id: 4,
@@ -51,7 +59,7 @@ const Shop = () => {
       category: "accessories",
       condition: "Excellent",
       size: "One Size",
-      image: "/lovable-uploads/handbag.jpg"
+      image: handbagImg
     },
     {
       id: 5,
@@ -61,7 +69,7 @@ const Shop = () => {
       category: "men",
       condition: "Very Good",
       size: "L",
-      image: "/lovable-uploads/formal-shirt.jpg"
+      image: formalShirtImg
     },
     {
       id: 6,
@@ -71,7 +79,7 @@ const Shop = () => {
       category: "kids",
       condition: "Good",
       size: "Age 8-10",
-      image: "/lovable-uploads/kids-tshirt.jpg"
+      image: kidsTshirtImg
     }
   ];
 
@@ -149,11 +157,11 @@ const Shop = () => {
               <Card key={product.id} className="group hover:shadow-lg transition-all duration-300 overflow-hidden">
                 <CardContent className="p-0">
                   <div className="aspect-square bg-gray-200 overflow-hidden relative">
-                    <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-                      <span className="text-gray-600 font-medium text-center px-4">
-                        {product.name}
-                      </span>
-                    </div>
+                    <img 
+                      src={product.image} 
+                      alt={product.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
                     <Badge className="absolute top-2 left-2 bg-green-600">
                       {product.condition}
                     </Badge>
