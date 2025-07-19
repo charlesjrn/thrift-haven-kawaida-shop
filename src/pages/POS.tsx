@@ -1,9 +1,9 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ShoppingCart, Search, Plus, Minus } from 'lucide-react';
+import { ShoppingCart, Search, Plus, Minus, Smartphone, CheckCircle } from 'lucide-react';
 import { useInventory } from '@/contexts/InventoryContext';
 import { useSales } from '@/contexts/SalesContext';
 import { useAuth } from '@/contexts/AuthContext';
@@ -17,6 +17,9 @@ export default function POS() {
   const [searchTerm, setSearchTerm] = useState('');
   const [cart, setCart] = useState<SaleItem[]>([]);
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'mpesa' | 'card'>('cash');
+  const [customerPhone, setCustomerPhone] = useState('');
+  const [mpesaStatus, setMpesaStatus] = useState<'idle' | 'pending' | 'success' | 'failed'>('idle');
+  const [showMpesaPrompt, setShowMpesaPrompt] = useState(false);
 
   const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -69,21 +72,48 @@ export default function POS() {
 
   const totalAmount = cart.reduce((sum, item) => sum + item.total, 0);
 
-  const completeSale = () => {
+  const initiatePayment = () => {
     if (cart.length === 0) {
       toast.error('Cart is empty');
       return;
     }
 
+    if (paymentMethod === 'mpesa') {
+      if (!customerPhone) {
+        toast.error('Please enter customer phone number');
+        return;
+      }
+      setShowMpesaPrompt(true);
+      // Simulate M-Pesa STK push
+      setMpesaStatus('pending');
+      toast.info('M-Pesa payment request sent to customer phone');
+      
+      // Simulate payment response (replace with actual M-Pesa API)
+      setTimeout(() => {
+        setMpesaStatus('success');
+        toast.success('M-Pesa payment received! Complete the sale.');
+      }, 5000);
+    } else {
+      completeSale();
+    }
+  };
+
+  const completeSale = () => {
+    const mpesaTransactionId = mpesaStatus === 'success' ? `MPE${Date.now()}` : undefined;
+    
     addSale({
       items: cart,
       totalAmount,
       paymentMethod,
       cashierId: user?.id || '',
-      cashierName: user?.username || ''
+      cashierName: user?.username || '',
+      mpesaTransactionId
     });
 
     setCart([]);
+    setCustomerPhone('');
+    setMpesaStatus('idle');
+    setShowMpesaPrompt(false);
     toast.success('Sale completed successfully!');
   };
 
@@ -187,19 +217,54 @@ export default function POS() {
                       <Button
                         variant={paymentMethod === 'mpesa' ? 'default' : 'outline'}
                         onClick={() => setPaymentMethod('mpesa')}
-                        className="flex-1"
+                        className="flex-1 flex items-center space-x-1"
                       >
-                        M-Pesa
+                        <Smartphone className="h-4 w-4" />
+                        <span>M-Pesa</span>
                       </Button>
                     </div>
                   </div>
 
+                  {paymentMethod === 'mpesa' && (
+                    <div className="mt-4 space-y-2">
+                      <label className="block text-sm font-medium">Customer Phone Number</label>
+                      <Input
+                        placeholder="e.g., 254712345678"
+                        value={customerPhone}
+                        onChange={(e) => setCustomerPhone(e.target.value)}
+                        type="tel"
+                      />
+                    </div>
+                  )}
+
+                  {showMpesaPrompt && (
+                    <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        {mpesaStatus === 'pending' && (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                            <span className="text-sm text-blue-700">Waiting for customer payment...</span>
+                          </>
+                        )}
+                        {mpesaStatus === 'success' && (
+                          <>
+                            <CheckCircle className="h-4 w-4 text-green-600" />
+                            <span className="text-sm text-green-700">Payment received! Click Complete Sale.</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   <Button
-                    onClick={completeSale}
+                    onClick={mpesaStatus === 'success' ? completeSale : initiatePayment}
                     className="w-full mt-4"
                     size="lg"
+                    disabled={mpesaStatus === 'pending'}
                   >
-                    Complete Sale
+                    {mpesaStatus === 'pending' ? 'Waiting for Payment...' : 
+                     mpesaStatus === 'success' ? 'Complete Sale' : 
+                     paymentMethod === 'mpesa' ? 'Send Payment Request' : 'Complete Sale'}
                   </Button>
                 </div>
               </div>

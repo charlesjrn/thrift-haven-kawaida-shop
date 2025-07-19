@@ -174,14 +174,12 @@ export default function CashierDashboard() {
                 <span>View Sales</span>
               </Button>
             </Link>
-            <Button 
-              variant="outline" 
-              className="w-full h-20 flex flex-col items-center space-y-2"
-              onClick={() => window.print()}
-            >
-              <Clock className="h-6 w-6" />
-              <span>Print Report</span>
-            </Button>
+            <Link to="/cashier/daily-report">
+              <Button variant="outline" className="w-full h-20 flex flex-col items-center space-y-2">
+                <Clock className="h-6 w-6" />
+                <span>Daily Report</span>
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Card>
