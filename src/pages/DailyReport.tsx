@@ -1,8 +1,11 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { useInventory } from '@/contexts/InventoryContext';
 import { useSales } from '@/contexts/SalesContext';
-import { Package, TrendingUp, TrendingDown, Archive } from 'lucide-react';
+import { Package, TrendingUp, TrendingDown, Archive, Download, FileText } from 'lucide-react';
+import jsPDF from 'jspdf';
+import * as XLSX from 'xlsx';
 
 export default function DailyReport() {
   const { products } = useInventory();
@@ -41,13 +44,73 @@ export default function DailyReport() {
   const totalSoldToday = stockReport.reduce((sum, item) => sum + item.soldStock, 0);
   const totalOpeningStock = stockReport.reduce((sum, item) => sum + item.openingStock, 0);
   const totalClosingStock = stockReport.reduce((sum, item) => sum + item.closingStock, 0);
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    const currentDate = new Date().toLocaleDateString();
+    
+    doc.setFontSize(16);
+    doc.text('AZIZ WINES AND SPIRITS', 105, 20, { align: 'center' });
+    doc.setFontSize(14);
+    doc.text(`Daily Stock Report - ${currentDate}`, 105, 30, { align: 'center' });
+    
+    doc.setFontSize(10);
+    let yPosition = 50;
+    
+    // Table headers
+    doc.text('Product Name', 20, yPosition);
+    doc.text('Opening', 80, yPosition);
+    doc.text('Purchased', 110, yPosition);
+    doc.text('Sold', 140, yPosition);
+    doc.text('Closing', 170, yPosition);
+    
+    yPosition += 10;
+    doc.line(20, yPosition - 5, 190, yPosition - 5);
+    
+    // Table data
+    stockReport.forEach((item) => {
+      doc.text(item.productName.substring(0, 25), 20, yPosition);
+      doc.text(item.openingStock.toString(), 80, yPosition);
+      doc.text(item.purchasedStock.toString(), 110, yPosition);
+      doc.text(item.soldStock.toString(), 140, yPosition);
+      doc.text(item.closingStock.toString(), 170, yPosition);
+      yPosition += 8;
+      
+      if (yPosition > 250) {
+        doc.addPage();
+        yPosition = 30;
+      }
+    });
+    
+    doc.save(`daily-stock-report-${currentDate}.pdf`);
+  };
+
+  const exportToExcel = () => {
+    const currentDate = new Date().toLocaleDateString();
+    const worksheet = XLSX.utils.json_to_sheet(stockReport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Daily Stock Report');
+    XLSX.writeFile(workbook, `daily-stock-report-${currentDate}.xlsx`);
+  };
   
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-foreground">Daily Stock Report</h1>
-        <div className="text-sm text-muted-foreground">
-          {new Date().toLocaleDateString()}
+        <div className="flex items-center gap-4">
+          <div className="flex gap-2">
+            <Button onClick={exportToPDF} variant="outline" size="sm">
+              <FileText className="h-4 w-4 mr-2" />
+              Export PDF
+            </Button>
+            <Button onClick={exportToExcel} variant="outline" size="sm">
+              <Download className="h-4 w-4 mr-2" />
+              Export Excel
+            </Button>
+          </div>
+          <div className="text-sm text-muted-foreground">
+            {new Date().toLocaleDateString()}
+          </div>
         </div>
       </div>
       

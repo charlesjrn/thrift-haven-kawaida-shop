@@ -43,12 +43,12 @@ export default function Login() {
           <div className="flex justify-center mb-4">
             <div className="flex items-center space-x-2">
               <Wine className="h-8 w-8 text-purple-600" />
-              <span className="text-2xl font-bold text-gray-900">WinesPOS</span>
+              <span className="text-2xl font-bold text-gray-900">Aziz Wines and Spirits</span>
             </div>
           </div>
           <CardTitle className="text-2xl">Welcome Back</CardTitle>
           <CardDescription>
-            Sign in to your Wines & Spirits POS account
+            Sign in to your Aziz Wines and Spirits POS account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -92,13 +92,6 @@ export default function Login() {
             </Button>
           </form>
           
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <p className="text-sm font-medium text-gray-700 mb-2">Demo Credentials:</p>
-            <div className="text-xs text-gray-600 space-y-1">
-              <p><strong>Admin:</strong> admin / admin123</p>
-              <p><strong>Cashier:</strong> cashier1 / cashier123</p>
-            </div>
-          </div>
         </CardContent>
       </Card>
     </div>

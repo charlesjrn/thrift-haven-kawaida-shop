@@ -73,7 +73,7 @@ export default function Sales() {
           </head>
           <body>
             <div class="header">
-              <h2>LIQUOR STORE POS</h2>
+              <h2>AZIZ WINES AND SPIRITS</h2>
               <p>Receipt #${sale.id.slice(-6)}</p>
               <p>${new Date(sale.timestamp).toLocaleString()}</p>
               <p>Cashier: ${sale.cashierName}</p>

@@ -47,7 +47,7 @@ export default function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <Wine className="h-8 w-8 text-purple-600" />
-            <span className="text-xl font-bold text-gray-900">WinesPOS</span>
+            <span className="text-xl font-bold text-gray-900">Aziz Wines and Spirits</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -99,7 +99,7 @@ export default function Header() {
                 <SheetHeader>
                   <SheetTitle className="flex items-center space-x-2">
                     <Wine className="h-6 w-6 text-purple-600" />
-                    <span>WinesPOS</span>
+                    <span>Aziz Wines and Spirits</span>
                   </SheetTitle>
                   <SheetDescription>
                     Logged in as {user?.username} ({user?.role})
