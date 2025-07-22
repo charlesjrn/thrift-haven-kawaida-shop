@@ -26,10 +26,7 @@ export default function Products() {
     image: ''
   });
 
-  // Fix cursor behavior by using controlled components with proper keys
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
+  // Fix cursor behavior by using direct state updates
 
   const categories: ProductCategory[] = ['Whisky', 'Vodka', 'Beer', 'Wine', 'Soft Drinks', 'Gin', 'Rum', 'Brandy', 'Liqueur'];
 
@@ -106,9 +103,8 @@ export default function Products() {
           <Label htmlFor="name">Product Name</Label>
           <Input
             id="name"
-            key="name-input"
             value={formData.name}
-            onChange={(e) => handleInputChange('name', e.target.value)}
+            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
             required
           />
         </div>
@@ -116,9 +112,8 @@ export default function Products() {
           <Label htmlFor="brand">Brand</Label>
           <Input
             id="brand"
-            key="brand-input"
             value={formData.brand}
-            onChange={(e) => handleInputChange('brand', e.target.value)}
+            onChange={(e) => setFormData(prev => ({ ...prev, brand: e.target.value }))}
             required
           />
         </div>
@@ -144,9 +139,8 @@ export default function Products() {
           <Label htmlFor="size">Size</Label>
           <Input
             id="size"
-            key="size-input"
             value={formData.size}
-            onChange={(e) => handleInputChange('size', e.target.value)}
+            onChange={(e) => setFormData(prev => ({ ...prev, size: e.target.value }))}
             placeholder="e.g., 750ml, 330ml"
             required
           />
@@ -158,10 +152,9 @@ export default function Products() {
           <Label htmlFor="price">Price (KSh)</Label>
           <Input
             id="price"
-            key="price-input"
             type="number"
             value={formData.price}
-            onChange={(e) => handleInputChange('price', e.target.value)}
+            onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
             required
           />
         </div>
@@ -169,10 +162,9 @@ export default function Products() {
           <Label htmlFor="stock">Stock Quantity</Label>
           <Input
             id="stock"
-            key="stock-input"
             type="number"
             value={formData.stock}
-            onChange={(e) => handleInputChange('stock', e.target.value)}
+            onChange={(e) => setFormData(prev => ({ ...prev, stock: e.target.value }))}
             required
           />
         </div>
@@ -180,10 +172,9 @@ export default function Products() {
           <Label htmlFor="minStock">Min Stock Alert</Label>
           <Input
             id="minStock"
-            key="minStock-input"
             type="number"
             value={formData.minStock}
-            onChange={(e) => handleInputChange('minStock', e.target.value)}
+            onChange={(e) => setFormData(prev => ({ ...prev, minStock: e.target.value }))}
             required
           />
         </div>
@@ -193,9 +184,8 @@ export default function Products() {
         <Label htmlFor="image">Product Image URL</Label>
         <Input
           id="image"
-          key="image-input"
           value={formData.image}
-          onChange={(e) => handleInputChange('image', e.target.value)}
+          onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
           placeholder="Enter image URL (optional)"
         />
       </div>

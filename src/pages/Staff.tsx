@@ -21,10 +21,7 @@ export default function Staff() {
     role: 'cashier' as 'admin' | 'cashier'
   });
 
-  // Fix cursor behavior by using controlled components with proper keys
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
+  // Fix cursor behavior by using direct state updates
 
   const resetForm = () => {
     setFormData({
@@ -81,9 +78,8 @@ export default function Staff() {
         <Label htmlFor="username">Username</Label>
         <Input
           id="username"
-          key="username-input"
           value={formData.username}
-          onChange={(e) => handleInputChange('username', e.target.value)}
+          onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
           required
         />
       </div>
@@ -92,10 +88,9 @@ export default function Staff() {
         <Label htmlFor="password">Password</Label>
         <Input
           id="password"
-          key="password-input"
           type="password"
           value={formData.password}
-          onChange={(e) => handleInputChange('password', e.target.value)}
+          onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
           required={!editingUser}
           placeholder={editingUser ? "Leave blank to keep current password" : ""}
         />
@@ -105,9 +100,8 @@ export default function Staff() {
         <Label htmlFor="role">Role</Label>
         <select
           id="role"
-          key="role-input"
           value={formData.role}
-          onChange={(e) => handleInputChange('role', e.target.value)}
+          onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value as 'admin' | 'cashier' }))}
           className="w-full p-2 border border-gray-300 rounded-md"
         >
           <option value="cashier">Cashier</option>
