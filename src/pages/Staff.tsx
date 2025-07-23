@@ -21,8 +21,6 @@ export default function Staff() {
     role: 'cashier' as 'admin' | 'cashier'
   });
 
-  // Fix cursor behavior by using direct state updates
-
   const resetForm = () => {
     setFormData({
       username: '',

@@ -1,14 +1,17 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ShoppingCart, Search, Plus, Minus, Smartphone } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ShoppingCart, Search, Plus, Minus, Smartphone, Printer } from 'lucide-react';
 import { useInventory } from '@/contexts/InventoryContext';
 import { useSales } from '@/contexts/SalesContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { Receipt } from '@/components/Receipt';
+import { useReactToPrint } from 'react-to-print';
 import { toast } from 'sonner';
-import { SaleItem } from '@/types';
+import { SaleItem, Sale } from '@/types';
 
 export default function POS() {
   const { products, updateStock } = useInventory();
@@ -17,6 +20,9 @@ export default function POS() {
   const [searchTerm, setSearchTerm] = useState('');
   const [cart, setCart] = useState<SaleItem[]>([]);
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'mpesa'>('cash');
+  const [showReceipt, setShowReceipt] = useState(false);
+  const [lastSale, setLastSale] = useState<Sale | null>(null);
+  const receiptRef = useRef<HTMLDivElement>(null);
 
   const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -69,6 +75,11 @@ export default function POS() {
 
   const totalAmount = cart.reduce((sum, item) => sum + item.total, 0);
 
+  const handlePrint = useReactToPrint({
+    contentRef: receiptRef,
+    documentTitle: `Receipt-${lastSale?.id || 'unknown'}`,
+  });
+
   const completeSale = () => {
     if (cart.length === 0) {
       toast.error('Cart is empty');
@@ -89,15 +100,26 @@ export default function POS() {
       updateStock(item.productId, item.quantity);
     });
     
-    addSale({
+    const saleData = {
       items: cart,
       totalAmount,
       paymentMethod,
       cashierId: user?.id || '',
       cashierName: user?.username || ''
-    });
+    };
 
+    addSale(saleData);
+
+    // Create sale object for receipt
+    const sale: Sale = {
+      ...saleData,
+      id: Date.now().toString(),
+      timestamp: new Date().toISOString()
+    };
+
+    setLastSale(sale);
     setCart([]);
+    setShowReceipt(true);
     toast.success('Sale completed successfully!');
   };
 
@@ -222,6 +244,29 @@ export default function POS() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Receipt Dialog */}
+      <Dialog open={showReceipt} onOpenChange={setShowReceipt}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Receipt</DialogTitle>
+          </DialogHeader>
+          {lastSale && (
+            <div className="space-y-4">
+              <Receipt ref={receiptRef} sale={lastSale} />
+              <div className="flex space-x-2">
+                <Button onClick={handlePrint} className="flex-1 flex items-center space-x-2">
+                  <Printer className="h-4 w-4" />
+                  <span>Print Receipt</span>
+                </Button>
+                <Button variant="outline" onClick={() => setShowReceipt(false)} className="flex-1">
+                  Close
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

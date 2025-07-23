@@ -26,8 +26,6 @@ export default function Products() {
     image: ''
   });
 
-  // Fix cursor behavior by using direct state updates
-
   const categories: ProductCategory[] = ['Whisky', 'Vodka', 'Beer', 'Wine', 'Soft Drinks', 'Gin', 'Rum', 'Brandy', 'Liqueur'];
 
   const resetForm = () => {

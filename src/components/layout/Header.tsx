@@ -1,6 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { Wine, LogOut, User, Menu } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -69,6 +70,7 @@ export default function Header() {
 
           {/* User Info & Actions */}
           <div className="flex items-center space-x-4">
+            <ThemeToggle />
             <div className="hidden sm:flex items-center space-x-2">
               <User className="h-4 w-4 text-gray-500" />
               <span className="text-sm text-gray-700">{user?.username}</span>
